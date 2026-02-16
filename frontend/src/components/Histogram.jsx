@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useRef } from "react";
 import * as d3 from "d3";
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
@@ -80,13 +82,13 @@ export default function Histogram({ scores }) {
     }, [scores]);
 
     return (
-        <Card>
+        <Card className="w-full h-auto block flex-grow">
             <CardHeader>
                 <CardTitle>Histogram of Maximum Score in a Single Turn</CardTitle>
                 <CardDescription>Simulated with a uniformly pseudorandom RNG.</CardDescription>
             </CardHeader>
             <CardContent>
-                <svg ref={ref}></svg>
+                <svg ref={ref} width={800} className="block"></svg>
             </CardContent>
         </Card>
     );

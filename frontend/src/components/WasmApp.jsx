@@ -163,13 +163,13 @@ const WasmApp = ({ showExtraControls, cpbRef, wasmModule, toggleExtraControls })
     <div>
       {wasmModule ? 
         <div>
-          <Tabs defaultValue="charts">
-            <TabsList className="grid w-full grid-cols-3">
+          <Tabs defaultValue="charts" className="w-full">
+            <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="charts">Dice Simulations</TabsTrigger>
               <TabsTrigger value="cheat-sheet">Bust Probabilities</TabsTrigger>
             </TabsList>
-            <TabsContent value="charts">
-              <Card>
+            <TabsContent value="charts" className="w-full">
+              <Card className="w-full">
                 <CardHeader>
                   <CardTitle>Dice Charts</CardTitle>
                 </CardHeader>

@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useRef } from "react";
 import * as d3 from "d3";
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
@@ -77,13 +79,13 @@ export default function CDFChart({ scores }) {
     }, [scores]);
 
     return (
-        <Card>
+        <Card className="mb-2 mt-2">
             <CardHeader>
                 <CardTitle>Cumulative Distribution Function of Maximum Score in a Single Turn</CardTitle>
                 <CardDescription>Simulated with a uniformly pseudorandom RNG.</CardDescription>
             </CardHeader>
             <CardContent>
-                <svg ref={ref}></svg>
+                <svg ref={ref} width={800} height={450}></svg>
             </CardContent>
         </Card>
     );

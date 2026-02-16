@@ -8,9 +8,6 @@ import Selector from "./Selector";
 import NumberInput from "./NumberInput";
 import MultiSelect from "./MultiSelector";
 import useLocalStorage from "@/hooks/useLocalStorage";
-import { Button } from "@/components/ui/button";
-import { Save } from "lucide-react";
-import SavedChords from "./SavedChords";
 
 import { 
   Tooltip, 
@@ -24,6 +21,7 @@ import CDFChart from "@/components/CDFChart";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
 import {debugLog} from "@/lib/utils";
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "./ui/card";
+import {Separator} from "./ui/separator";
 
 const DiceCharts = ({
   wasmModule,
@@ -271,9 +269,10 @@ const DiceCharts = ({
   ];
 
   return (
-    <div className="max-w-md">
+    <div className="w-full">
       <form onSubmit={handleSubmit}>
         <div>
+          <h4>Scoring Parameters</h4>
           <Select
             onValueChange={(val) => {
               setValue(val);
@@ -318,6 +317,8 @@ const DiceCharts = ({
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
+          <Separator className="m-1" />
+          <h4>Score and Pass Parameters</h4>
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild className="w-full text-left"><div>
@@ -352,6 +353,7 @@ const DiceCharts = ({
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
+          <Separator className="m-1 mb-3" />
         </div>
 
         <div>
@@ -365,7 +367,7 @@ const DiceCharts = ({
         <div>
           {results.length > 0 && (
               <>
-                <Card>
+                <Card className="w-full mb-2">
                   <CardHeader>
                     <CardTitle>Maximum Score Simulation</CardTitle>
                     <CardDescription>Simulates &quot;Score and Continue&quot; until busting.</CardDescription>

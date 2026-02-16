@@ -60,32 +60,6 @@ const ChatBar = ({ onSubmit, onTextChange, fileInputRef, textInput }) => {
 
     return (
       <div className="flex items-center border rounded-lg p-2 bg-white mb-4">
-        {/* File upload/attach icon */}
-        <div className="relative">
-          <input
-            type="file"
-            id="fileUpload"
-            className="hidden"
-            ref={fileInputRef}
-            onChange={handleFileChange}
-          />
-          <button
-            className="p-2 focus:outline-none"
-            onClick={handleFileButtonClick}
-          >
-            {fileAttached ? (
-              /* Minus icon for removing file */
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
-              </svg>
-            ) : (
-              /* Plus/Attach icon when no file is selected */
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 5v14m7-7H5" />
-              </svg>
-            )}
-          </button>
-        </div>
 
         {/* Text input area */}
         <textarea
