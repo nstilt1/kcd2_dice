@@ -88,7 +88,9 @@ export default function Histogram({ scores }) {
                 <CardDescription>Simulated with a uniformly pseudorandom RNG.</CardDescription>
             </CardHeader>
             <CardContent>
-                <svg ref={ref} width={800} className="block"></svg>
+                <div className="overflow-x-auto">
+                    <svg ref={ref} width={800} height={450} className="w-full max-w-full h-auto block"></svg>
+                </div>
             </CardContent>
         </Card>
     );

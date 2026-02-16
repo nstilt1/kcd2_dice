@@ -79,13 +79,15 @@ export default function CDFChart({ scores }) {
     }, [scores]);
 
     return (
-        <Card className="mb-2 mt-2">
+        <Card className="mb-2 mt-2 w-full">
             <CardHeader>
                 <CardTitle>Cumulative Distribution Function of Maximum Score in a Single Turn</CardTitle>
                 <CardDescription>Simulated with a uniformly pseudorandom RNG.</CardDescription>
             </CardHeader>
             <CardContent>
-                <svg ref={ref} width={800} height={450}></svg>
+                <div className="overflow-x-auto">
+                    <svg ref={ref} width={800} height={450} className="w-full max-w-full h-auto block"></svg>
+                </div>
             </CardContent>
         </Card>
     );
