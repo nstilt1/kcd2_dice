@@ -307,13 +307,13 @@ const DiceCharts = ({
                 <NumberInput
                     value={numThrows}
                     onChange={handleNumThrowsChange}
-                    id="numChords"
-                    labelText="# of throws:"
+                    id="numTurns"
+                    labelText="# of turns:"
                 />
               </div></TooltipTrigger>
               <TooltipContent>
                 <p className="text-lg max-w-md">
-                  Determines the number of throws in the sample space.
+                  Determines the number of turns in the sample space.
                 </p>
               </TooltipContent>
             </Tooltip>
