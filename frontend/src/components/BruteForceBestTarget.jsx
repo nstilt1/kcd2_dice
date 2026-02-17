@@ -57,6 +57,7 @@ const BruteForceBestTarget = ({
     const [sanitizedDiceThreshold, setSanitizedDiceThreshold] = useLocalStorage("sanitizedDiceThreshold", 1);
     const [minScore, setMinScore] = useLocalStorage("minScore", 1000);
     const [sanitizedMinScore, setSanitizedMinScore] = useLocalStorage("sanitizedMinScore", 1000);
+    const [targetScore, setTargetScore] = useLocalStorage("targetScore", 8000);
 
     const handleTextChange = (event) => {
         setTextInput(event.target.value);
@@ -90,7 +91,7 @@ const BruteForceBestTarget = ({
         }
     }
 
-    const handleNumUniqueChordsChange = (value) => {
+    const handleTargetScoreChange = (value) => {
         setNumUniqueChords(value);
         if (value >= 0) {
             setSanitizedNumUniqueChords(Math.round(value));
@@ -145,10 +146,12 @@ const BruteForceBestTarget = ({
                         d.probabilities[4],
                         d.probabilities[5],
                         diceThreshold,
-                        i, // target score
+                        i, // minimumScore
+                        false,
+                        targetScore,
                     );
                     const r = data.max_scores_with_conditional_pass;
-                    const half = r.results[r.results.length / 2];
+                    const half = r.results[Math.floor(r.results.length / 2)];
                     if (half > max_50) {
                         max_50 = half;
                         max_i = i;
@@ -177,7 +180,7 @@ const BruteForceBestTarget = ({
             setMax4(best_mean_result.maximum);
             setResults4(best_mean_result.results)
             setBestTargetScore2(max_i_2);
-            setBestMeanDiceThreshold(best_dice_threshold_median);
+            setBestMeanDiceThreshold(best_dice_threshold_mean);
         } catch (error) {
             console.error("Error processing file", error);
             alert("An error occurred while generating the MIDI file.");
@@ -233,6 +236,23 @@ const BruteForceBestTarget = ({
                             </TooltipContent>
                         </Tooltip>
                     </TooltipProvider>
+                    <TooltipProvider>
+                        <Tooltip>
+                            <TooltipTrigger asChild className="w-full text-left"><div>
+                                <NumberInput
+                                    value={targetScore}
+                                    onChange={handleTargetScoreChange}
+                                    id="targetScore"
+                                    labelText="maximum score limit:"
+                                />
+                            </div></TooltipTrigger>
+                            <TooltipContent>
+                                <p className="text-lg max-w-md">
+                                    Automatically passes once this score is reached.
+                                </p>
+                            </TooltipContent>
+                        </Tooltip>
+                    </TooltipProvider>
                     <Separator className="m-1 mb-3" />
                 </div>
 
@@ -250,7 +270,7 @@ const BruteForceBestTarget = ({
                             <Card>
                                 <CardHeader>
                                     <CardTitle>Maximum Median Score Simulation with Passing</CardTitle>
-                                    <CardDescription>Simulates &quot;Score and Continue&quot; until numDice &le; diceThreshold ({bestMedianDiceThreshold}) and score &ge; mostOptimalTargetScore ({bestTargetScore}).</CardDescription>
+                                    <CardDescription>Simulates &quot;Score and Continue&quot; until numDice &le; diceThreshold ({bestMedianDiceThreshold}) and score &ge; mostOptimalMinScore ({bestTargetScore}).</CardDescription>
                                 </CardHeader>
                                 <CardContent>
                                     <p>Mean = {mean3}</p>
@@ -266,7 +286,7 @@ const BruteForceBestTarget = ({
                             <Card>
                                 <CardHeader>
                                     <CardTitle>Maximum Mean Score Simulation with Passing</CardTitle>
-                                    <CardDescription>Simulates &quot;Score and Continue&quot; until numDice &le; diceThreshold ({bestMeanDiceThreshold}) and score &ge; mostOptimalTargetScore ({bestTargetScore2}).</CardDescription>
+                                    <CardDescription>Simulates &quot;Score and Continue&quot; until numDice &le; diceThreshold ({bestMeanDiceThreshold}) and score &ge; mostOptimalMinScore ({bestTargetScore2}).</CardDescription>
                                 </CardHeader>
                                 <CardContent>
                                     <p>Mean = {mean4}</p>

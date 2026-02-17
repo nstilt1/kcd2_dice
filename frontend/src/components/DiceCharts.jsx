@@ -68,7 +68,7 @@ const DiceCharts = ({
   const [sanitizedDiceThreshold, setSanitizedDiceThreshold] = useLocalStorage("sanitizedDiceThreshold", 1);
   const [minScore, setMinScore] = useLocalStorage("minScore", 1000);
   const [sanitizedMinScore, setSanitizedMinScore] = useLocalStorage("sanitizedMinScore", 1000);
-
+const [targetScore, setTargetScore] = useLocalStorage("targetScore", 8000);
   // Function to save current form settings
   const saveCurrentSettings = (name) => {
     const settingsToSave = {
@@ -168,7 +168,7 @@ const DiceCharts = ({
     }
   }
 
-  const handleDurationChange = (value) => {
+  const handleTargetScoreChange = (value) => {
     setDuration(value);
     if (value > 0) {
       setDuration(Math.round(value));
@@ -217,6 +217,8 @@ const DiceCharts = ({
           d.probabilities[5],
           sanitizedDiceThreshold,
           sanitizedMinScore,
+          true,
+          targetScore,
       );
       console.timeEnd("simulate_dice");
 
@@ -347,6 +349,23 @@ const DiceCharts = ({
               <TooltipContent>
                 <p className="text-lg max-w-md">
                   Determines the minimum score to pass when the dice threshold is met.
+                </p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild className="w-full text-left"><div>
+                <NumberInput
+                    value={targetScore}
+                    onChange={handleTargetScoreChange}
+                    id="targetScore"
+                    labelText="Target score for passing:"
+                />
+              </div></TooltipTrigger>
+              <TooltipContent>
+                <p className="text-lg max-w-md">
+                  The simulator will automatically pass when this score is reached.
                 </p>
               </TooltipContent>
             </Tooltip>

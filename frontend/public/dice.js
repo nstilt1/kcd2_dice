@@ -180,14 +180,16 @@ if (Symbol.dispose) StatsResult.prototype[Symbol.dispose] = StatsResult.prototyp
  * @param {number} prob_6
  * @param {number} dice_threshold
  * @param {number} min_score
+ * @param {boolean} run_max_score_simulation
+ * @param {number} target_score
  * @returns {DoubleSimulationResult}
  */
-export function analyze_dice(seed_txt, rng_type, num_throws, prob_1, prob_2, prob_3, prob_4, prob_5, prob_6, dice_threshold, min_score) {
+export function analyze_dice(seed_txt, rng_type, num_throws, prob_1, prob_2, prob_3, prob_4, prob_5, prob_6, dice_threshold, min_score, run_max_score_simulation, target_score) {
     const ptr0 = passStringToWasm0(seed_txt, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
     const len0 = WASM_VECTOR_LEN;
     const ptr1 = passStringToWasm0(rng_type, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
     const len1 = WASM_VECTOR_LEN;
-    const ret = wasm.analyze_dice(ptr0, len0, ptr1, len1, num_throws, prob_1, prob_2, prob_3, prob_4, prob_5, prob_6, dice_threshold, min_score);
+    const ret = wasm.analyze_dice(ptr0, len0, ptr1, len1, num_throws, prob_1, prob_2, prob_3, prob_4, prob_5, prob_6, dice_threshold, min_score, run_max_score_simulation, target_score);
     return DoubleSimulationResult.__wrap(ret);
 }
 
