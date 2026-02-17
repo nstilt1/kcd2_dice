@@ -49,16 +49,18 @@ const DiceCharts = ({
   const [rngType, setRngType] = useLocalStorage("rng_type", 'ChaCha8Rng');
   const [numThrows, setNumThrows] = useLocalStorage("num_throws", 10000);
 
+  // score until bust simulation
   const [mean, setMean] = useLocalStorage("mean", 0);
   const [min, setMin] = useLocalStorage("min", 0);
   const [max, setMax] = useLocalStorage("max", 10000);
   const [results, setResults] = useLocalStorage("results", []);
 
+  // score and pass simulation
   const [mean2, setMean2] = useLocalStorage("mean2", 0);
   const [min2, setMin2] = useLocalStorage("min2", 0);
   const [max2, setMax2] = useLocalStorage("max2", 10000);
   const [results2, setResults2] = useLocalStorage("results2", []);
-
+  
   const [value, setValue] = useLocalStorage("value", "");
   const [sanitizedNumThrows, setSanitizedNumThrows] = useLocalStorage("sanitizedNumChords", 10000);
 
@@ -186,7 +188,7 @@ const DiceCharts = ({
     }
 
     if(!die) {
-      alert("Please select a dice.");
+      alert("Please select a die.");
       return;
     }
 
@@ -201,10 +203,6 @@ const DiceCharts = ({
     }
 
     try {
-
-
-      //console.log("useSameChords = " + useSameChords);
-      //console.log("key: " + chosenKey);
       let d = sanitizedDice.find(d => d.name === die);
       console.time("simulate_dice");
       const data = wasmModule.analyze_dice(

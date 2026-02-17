@@ -21,6 +21,7 @@ import DiceCharts from './DiceCharts';
 import CheatSheet from './CheatSheet';
 import ChordFinder from './ChordFinder';
 import BustProbabilities from "@/components/BustProbabilities";
+import BruteForceBestTarget from "@/components/BruteForceBestTarget";
 
 const WasmApp = ({ showExtraControls, cpbRef, wasmModule, toggleExtraControls }) => {
   const [key, setKey] = useLocalStorage("key", 'random');
@@ -164,9 +165,10 @@ const WasmApp = ({ showExtraControls, cpbRef, wasmModule, toggleExtraControls })
       {wasmModule ? 
         <div>
           <Tabs defaultValue="charts" className="w-full max-w-5xl mx-auto">
-            <TabsList className="grid w-full grid-cols-2">
+            <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="charts">Dice Simulations</TabsTrigger>
               <TabsTrigger value="cheat-sheet">Bust Probabilities</TabsTrigger>
+              <TabsTrigger value="brute-force-target-score">Brute Force</TabsTrigger>
             </TabsList>
             <TabsContent value="charts" className="w-full">
               <Card className="w-full sm:max-w-full">
@@ -197,31 +199,16 @@ const WasmApp = ({ showExtraControls, cpbRef, wasmModule, toggleExtraControls })
               </CardContent>
               </Card>
             </TabsContent>
-            <TabsContent value="chord-finder">
-              <Card>
+            <TabsContent value="brute-force-target-score" className="w-full">
+              <Card className="w-full sm:max-w-full">
                 <CardHeader>
-                  <CardTitle>Chord Finder</CardTitle>
+                  <CardTitle>Brute Force Optimal Target Score to Pass</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <ChordFinder
-                    wasmModule={wasmModule}
-                    chosenKey={key}
-                    setKey={setKey}
-                    chordGroup={chordGroup}
-                    setChordGroup={setChordGroup}
-                    customChords={customChords}
-                    scale={scale}
-                    setScale={setScale}
-                    handleChordTypeSelection={handleChordTypeSelection}
-                    keys={keys}
-                    chordGroups={chordGroups}
-                    customChordTypes={customChordTypes}
-                    scales={scales}
-                    showExtraControls={showExtraControls}
-                    tableScheme={tableScheme}
-                    setTableScheme={setTableScheme}
-                    tableSchemes={tableSchemes}
-                    cpbRef={cpbRef}
+                  <BruteForceBestTarget
+                      wasmModule={wasmModule}
+                      dice={dice}
+                      sanitizedDice={sanitizedDice()}
                   />
                 </CardContent>
               </Card>
