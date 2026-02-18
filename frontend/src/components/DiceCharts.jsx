@@ -23,6 +23,23 @@ import {debugLog} from "@/lib/utils";
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "./ui/card";
 import {Separator} from "./ui/separator";
 
+export function percentile(arr, p) {
+  const n = arr.length;
+  if (n === 0) return undefined;
+
+  const index = (p / 100) * (n - 1);
+  const lower = Math.floor(index);
+  const upper = Math.ceil(index);
+
+  if (lower === upper) {
+    return arr[lower];
+  }
+
+  const weight = index - lower;
+  return arr[lower] * (1 - weight) + arr[upper] * weight;
+}
+
+
 const DiceCharts = ({
   wasmModule,
     dice,
@@ -392,9 +409,9 @@ const [targetScore, setTargetScore] = useLocalStorage("targetScore", 8000);
                   <CardContent>
                     <p>Mean = {mean}</p>
                     <p>Min = {min}</p>
-                    <p>25th percentile = {results[results.length / 4]}</p>
-                    <p>50th percentile = {results[results.length / 2]}</p>
-                    <p>75th percentile = {results[3 * results.length / 4]}</p>
+                    <p>25th percentile = {percentile(results, 25)}</p>
+                    <p>50th percentile = {percentile(results, 50)}</p>
+                    <p>75th percentile = {percentile(results, 75)}</p>
                     <p>Max = {max}</p>
                     <Histogram scores={results} label="Max Score in a Single Turn Histogram"/>
                     <CDFChart scores={results} label="Max Score in a Single Turn CDF Chart"/>
@@ -408,9 +425,9 @@ const [targetScore, setTargetScore] = useLocalStorage("targetScore", 8000);
                   <CardContent>
                     <p>Mean = {mean2}</p>
                     <p>Min = {min2}</p>
-                    <p>25th percentile = {results2[results2.length / 4]}</p>
-                    <p>50th percentile = {results2[results2.length / 2]}</p>
-                    <p>75th percentile = {results2[3 * results2.length / 4]}</p>
+                    <p>25th percentile = {percentile(results2, 25)}</p>
+                    <p>50th percentile = {percentile(results2, 50)}</p>
+                    <p>75th percentile = {percentile(results2, 75)}</p>
                     <p>Max = {max2}</p>
                     <Histogram scores={results2} label="Max Score in a Single Turn Histogram"/>
                     <CDFChart scores={results2} label="Max Score in a Single Turn CDF Chart"/>

@@ -22,12 +22,13 @@ import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/c
 import {debugLog} from "@/lib/utils";
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "./ui/card";
 import {Separator} from "./ui/separator";
+import { percentile } from "./DiceCharts";
 
 const BruteForceBestTarget = ({
-                        wasmModule,
-                        dice,
-                        sanitizedDice,
-                    }) => {
+      wasmModule,
+      dice,
+      sanitizedDice,
+  }) => {
     const [textInput, setTextInput] = useLocalStorage("textInput", '');
 
     const [die, setDie] = useLocalStorage("die", "");
@@ -151,7 +152,7 @@ const BruteForceBestTarget = ({
                         targetScore,
                     );
                     const r = data.max_scores_with_conditional_pass;
-                    const half = r.results[Math.floor(r.results.length / 2)];
+                    const half = percentile(r.results, 50);
                     if (half > max_50) {
                         max_50 = half;
                         max_i = i;
@@ -275,9 +276,9 @@ const BruteForceBestTarget = ({
                                 <CardContent>
                                     <p>Mean = {mean3}</p>
                                     <p>Min = {min3}</p>
-                                    <p>25th percentile = {results3[results3.length / 4]}</p>
-                                    <p>50th percentile = {results3[results3.length / 2]}</p>
-                                    <p>75th percentile = {results3[3 * results3.length / 4]}</p>
+                                    <p>25th percentile = {percentile(results3, 25)}</p>
+                                    <p>50th percentile = {percentile(results3, 50)}</p>
+                                    <p>75th percentile = {percentile(results3, 75)}</p>
                                     <p>Max = {max3}</p>
                                     <Histogram scores={results3} label="Max Score in a Single Turn Histogram"/>
                                     <CDFChart scores={results3} label="Max Score in a Single Turn CDF Chart"/>
@@ -291,9 +292,9 @@ const BruteForceBestTarget = ({
                                 <CardContent>
                                     <p>Mean = {mean4}</p>
                                     <p>Min = {min4}</p>
-                                    <p>25th percentile = {results4[results4.length / 4]}</p>
-                                    <p>50th percentile = {results4[results4.length / 2]}</p>
-                                    <p>75th percentile = {results4[3 * results4.length / 4]}</p>
+                                    <p>25th percentile = {percentile(results4, 25)}</p>
+                                    <p>50th percentile = {percentile(results4, 50)}</p>
+                                    <p>75th percentile = {percentile(results4, 75)}</p>
                                     <p>Max = {max4}</p>
                                     <Histogram scores={results4} label="Max Score in a Single Turn Histogram"/>
                                     <CDFChart scores={results4} label="Max Score in a Single Turn CDF Chart"/>
