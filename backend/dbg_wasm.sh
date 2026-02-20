@@ -5,6 +5,8 @@
 #if [ $? -eq 0 ]; then
 #    echo "No mutations found"
 cd ./dice
+    RUSTFLAGS="-C target-feature=+atomics,+bulk-memory,+mutable-globals" \ 
+    worker_count=navigator.hardwareConcurrency \ 
     cargo build --lib --target wasm32-unknown-unknown
 
     wasm-bindgen --target web \
