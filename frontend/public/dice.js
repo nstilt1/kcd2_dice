@@ -1,3 +1,77 @@
+import { startWorkers } from './snippets/wasm-bindgen-rayon-38edf6e439f6d70d/src/workerHelpers.js';
+
+/**
+ * Result of a brute force search for the best dice threshold and target score.
+ */
+export class BruteForceResult {
+    static __wrap(ptr) {
+        ptr = ptr >>> 0;
+        const obj = Object.create(BruteForceResult.prototype);
+        obj.__wbg_ptr = ptr;
+        BruteForceResultFinalization.register(obj, obj.__wbg_ptr, obj);
+        return obj;
+    }
+    __destroy_into_raw() {
+        const ptr = this.__wbg_ptr;
+        this.__wbg_ptr = 0;
+        BruteForceResultFinalization.unregister(this);
+        return ptr;
+    }
+    free() {
+        const ptr = this.__destroy_into_raw();
+        wasm.__wbg_bruteforceresult_free(ptr, 0);
+    }
+    /**
+     * Gets the best dice threshold for maximizing the mean score.
+     * @returns {number}
+     */
+    get best_mean_dice_threshold() {
+        const ret = wasm.bruteforceresult_best_mean_dice_threshold(this.__wbg_ptr);
+        return ret >>> 0;
+    }
+    /**
+     * Gets the best target score for maximizing the mean score.
+     * @returns {number}
+     */
+    get best_mean_target_score() {
+        const ret = wasm.bruteforceresult_best_mean_target_score(this.__wbg_ptr);
+        return ret >>> 0;
+    }
+    /**
+     * Gets the sorted results for the best target score and dice threshold for maximizing the mean score.
+     * @returns {SimulationResult}
+     */
+    get best_mean_target_score_results() {
+        const ret = wasm.bruteforceresult_best_mean_target_score_results(this.__wbg_ptr);
+        return SimulationResult.__wrap(ret);
+    }
+    /**
+     * Gets the best dice threshold for maximizing the median score.
+     * @returns {number}
+     */
+    get best_median_dice_threshold() {
+        const ret = wasm.bruteforceresult_best_median_dice_threshold(this.__wbg_ptr);
+        return ret >>> 0;
+    }
+    /**
+     * Gets the best target score for maximizing the median score.
+     * @returns {number}
+     */
+    get best_median_target_score() {
+        const ret = wasm.bruteforceresult_best_median_target_score(this.__wbg_ptr);
+        return ret >>> 0;
+    }
+    /**
+     * Gets the sorted results for the best target score and dice threshold for maximizing the median score.
+     * @returns {SimulationResult}
+     */
+    get best_median_target_score_results() {
+        const ret = wasm.bruteforceresult_best_median_target_score_results(this.__wbg_ptr);
+        return SimulationResult.__wrap(ret);
+    }
+}
+if (Symbol.dispose) BruteForceResult.prototype[Symbol.dispose] = BruteForceResult.prototype.free;
+
 export class DoubleSimulationResult {
     static __wrap(ptr) {
         ptr = ptr >>> 0;
@@ -118,11 +192,19 @@ export class SimulationResult {
         return ret;
     }
     /**
+     * Gets the median score of this simulation.
+     * @returns {number}
+     */
+    get median() {
+        const ret = wasm.roll_p_bust(this.__wbg_ptr);
+        return ret;
+    }
+    /**
      * Gets the minimum score of this simulation.
      * @returns {number}
      */
     get minimum() {
-        const ret = wasm.simulationresult_minimum(this.__wbg_ptr);
+        const ret = wasm.roll_num_dice(this.__wbg_ptr);
         return ret >>> 0;
     }
     /**
@@ -194,6 +276,27 @@ export function analyze_dice(seed_txt, rng_type, num_throws, prob_1, prob_2, pro
 }
 
 /**
+ * @param {string} seed_txt
+ * @param {string} rng_type
+ * @param {number} num_turns
+ * @param {number} prob_1
+ * @param {number} prob_2
+ * @param {number} prob_3
+ * @param {number} prob_4
+ * @param {number} prob_5
+ * @param {number} prob_6
+ * @returns {BruteForceResult}
+ */
+export function brute_force(seed_txt, rng_type, num_turns, prob_1, prob_2, prob_3, prob_4, prob_5, prob_6) {
+    const ptr0 = passStringToWasm0(seed_txt, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+    const len0 = WASM_VECTOR_LEN;
+    const ptr1 = passStringToWasm0(rng_type, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+    const len1 = WASM_VECTOR_LEN;
+    const ret = wasm.brute_force(ptr0, len0, ptr1, len1, num_turns, prob_1, prob_2, prob_3, prob_4, prob_5, prob_6);
+    return BruteForceResult.__wrap(ret);
+}
+
+/**
  * @param {number} prob_1
  * @param {number} prob_2
  * @param {number} prob_3
@@ -207,15 +310,119 @@ export function dice_stats(prob_1, prob_2, prob_3, prob_4, prob_5, prob_6) {
     return StatsResult.__wrap(ret);
 }
 
+/**
+ * @param {number} num_threads
+ * @returns {Promise<any>}
+ */
+export function initThreadPool(num_threads) {
+    const ret = wasm.initThreadPool(num_threads);
+    return ret;
+}
+
+export class wbg_rayon_PoolBuilder {
+    static __wrap(ptr) {
+        ptr = ptr >>> 0;
+        const obj = Object.create(wbg_rayon_PoolBuilder.prototype);
+        obj.__wbg_ptr = ptr;
+        wbg_rayon_PoolBuilderFinalization.register(obj, obj.__wbg_ptr, obj);
+        return obj;
+    }
+    __destroy_into_raw() {
+        const ptr = this.__wbg_ptr;
+        this.__wbg_ptr = 0;
+        wbg_rayon_PoolBuilderFinalization.unregister(this);
+        return ptr;
+    }
+    free() {
+        const ptr = this.__destroy_into_raw();
+        wasm.__wbg_wbg_rayon_poolbuilder_free(ptr, 0);
+    }
+    build() {
+        wasm.wbg_rayon_poolbuilder_build(this.__wbg_ptr);
+    }
+    /**
+     * @returns {number}
+     */
+    numThreads() {
+        const ret = wasm.wbg_rayon_poolbuilder_numThreads(this.__wbg_ptr);
+        return ret >>> 0;
+    }
+    /**
+     * @returns {number}
+     */
+    receiver() {
+        const ret = wasm.wbg_rayon_poolbuilder_receiver(this.__wbg_ptr);
+        return ret >>> 0;
+    }
+}
+if (Symbol.dispose) wbg_rayon_PoolBuilder.prototype[Symbol.dispose] = wbg_rayon_PoolBuilder.prototype.free;
+
+/**
+ * @param {number} receiver
+ */
+export function wbg_rayon_start_worker(receiver) {
+    wasm.wbg_rayon_start_worker(receiver);
+}
+
 function __wbg_get_imports() {
     const import0 = {
         __proto__: null,
+        __wbg___wbindgen_is_undefined_9e4d92534c42d778: function(arg0) {
+            const ret = arg0 === undefined;
+            return ret;
+        },
+        __wbg___wbindgen_memory_bd1fbcf21fbef3c8: function() {
+            const ret = wasm.memory;
+            return ret;
+        },
+        __wbg___wbindgen_module_f6b8052d79c1cc16: function() {
+            const ret = wasmModule;
+            return ret;
+        },
         __wbg___wbindgen_throw_be289d5034ed271b: function(arg0, arg1) {
             throw new Error(getStringFromWasm0(arg0, arg1));
+        },
+        __wbg_call_389efe28435a9388: function() { return handleError(function (arg0, arg1) {
+            const ret = arg0.call(arg1);
+            return ret;
+        }, arguments); },
+        __wbg_instanceof_Window_ed49b2db8df90359: function(arg0) {
+            let result;
+            try {
+                result = arg0 instanceof Window;
+            } catch (_) {
+                result = false;
+            }
+            const ret = result;
+            return ret;
+        },
+        __wbg_new_no_args_1c7c842f08d00ebb: function(arg0, arg1) {
+            const ret = new Function(getStringFromWasm0(arg0, arg1));
+            return ret;
         },
         __wbg_roll_new: function(arg0) {
             const ret = Roll.__wrap(arg0);
             return ret;
+        },
+        __wbg_startWorkers_2ca11761e08ff5d5: function(arg0, arg1, arg2) {
+            const ret = startWorkers(arg0, arg1, wbg_rayon_PoolBuilder.__wrap(arg2));
+            return ret;
+        },
+        __wbg_static_accessor_GLOBAL_12837167ad935116: function() {
+            const ret = typeof global === 'undefined' ? null : global;
+            return isLikeNone(ret) ? 0 : addToExternrefTable0(ret);
+        },
+        __wbg_static_accessor_GLOBAL_THIS_e628e89ab3b1c95f: function() {
+            const ret = typeof globalThis === 'undefined' ? null : globalThis;
+            return isLikeNone(ret) ? 0 : addToExternrefTable0(ret);
+        },
+        __wbg_static_accessor_SELF_a621d3dfbb60d0ce: function() {
+            const ret = typeof self === 'undefined' ? null : self;
+            return isLikeNone(ret) ? 0 : addToExternrefTable0(ret);
+        },
+        __wbg_static_accessor_WINDOW_f8727f0cf888e0bd: function() {
+            const ret = typeof window === 'undefined' ? null : window;
+            return isLikeNone(ret) ? 0 : addToExternrefTable0(ret);
         },
         __wbindgen_init_externref_table: function() {
             const table = wasm.__wbindgen_externrefs;
@@ -233,6 +440,9 @@ function __wbg_get_imports() {
     };
 }
 
+const BruteForceResultFinalization = (typeof FinalizationRegistry === 'undefined')
+    ? { register: () => {}, unregister: () => {} }
+    : new FinalizationRegistry(ptr => wasm.__wbg_bruteforceresult_free(ptr >>> 0, 1));
 const DoubleSimulationResultFinalization = (typeof FinalizationRegistry === 'undefined')
     ? { register: () => {}, unregister: () => {} }
     : new FinalizationRegistry(ptr => wasm.__wbg_doublesimulationresult_free(ptr >>> 0, 1));
@@ -245,6 +455,15 @@ const SimulationResultFinalization = (typeof FinalizationRegistry === 'undefined
 const StatsResultFinalization = (typeof FinalizationRegistry === 'undefined')
     ? { register: () => {}, unregister: () => {} }
     : new FinalizationRegistry(ptr => wasm.__wbg_statsresult_free(ptr >>> 0, 1));
+const wbg_rayon_PoolBuilderFinalization = (typeof FinalizationRegistry === 'undefined')
+    ? { register: () => {}, unregister: () => {} }
+    : new FinalizationRegistry(ptr => wasm.__wbg_wbg_rayon_poolbuilder_free(ptr >>> 0, 1));
+
+function addToExternrefTable0(obj) {
+    const idx = wasm.__externref_table_alloc();
+    wasm.__wbindgen_externrefs.set(idx, obj);
+    return idx;
+}
 
 function getArrayJsValueFromWasm0(ptr, len) {
     ptr = ptr >>> 0;
@@ -289,6 +508,19 @@ function getUint8ArrayMemory0() {
         cachedUint8ArrayMemory0 = new Uint8Array(wasm.memory.buffer);
     }
     return cachedUint8ArrayMemory0;
+}
+
+function handleError(f, args) {
+    try {
+        return f.apply(this, args);
+    } catch (e) {
+        const idx = addToExternrefTable0(e);
+        wasm.__wbindgen_exn_store(idx);
+    }
+}
+
+function isLikeNone(x) {
+    return x === undefined || x === null;
 }
 
 function passStringToWasm0(arg, malloc, realloc) {

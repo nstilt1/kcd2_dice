@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import MidiPlayer from "./MidiPlayer";
 import ChatBar from "./ChatBar";
 import Selector from "./Selector";
@@ -196,8 +196,23 @@ const [targetScore, setTargetScore] = useLocalStorage("targetScore", 8000);
     setIsRandom(!isRandom);
   }
 
+  useEffect(() => {
+    console.log("DiceCharts wasmModule:", wasmModule);
+  }, [wasmModule]);
+
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    if (!wasmModule) {
+      console.warn("WASM not ready yet");
+      return;
+    }
+
+    // optional: also ensure export exists
+    if (typeof wasmModule.analyze_dice !== "function") {
+      console.error("analyze_dice not exported on wasmModule", Object.keys(wasmModule));
+      return;
+    }
 
     if(!textInput) {
       alert("Please provide an input seed.");

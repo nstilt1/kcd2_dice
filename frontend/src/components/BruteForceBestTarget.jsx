@@ -59,7 +59,7 @@ const BruteForceBestTarget = ({
     const [minScore, setMinScore] = useLocalStorage("minScore", 1000);
     const [sanitizedMinScore, setSanitizedMinScore] = useLocalStorage("sanitizedMinScore", 1000);
     const [targetScore, setTargetScore] = useLocalStorage("targetScore", 8000);
-
+    const [sanitizedTargetScore, setSanitizedTargetScore] = useLocalStorage("sanitizedTargetScore", 8000);
     const handleTextChange = (event) => {
         setTextInput(event.target.value);
     }
@@ -93,9 +93,9 @@ const BruteForceBestTarget = ({
     }
 
     const handleTargetScoreChange = (value) => {
-        setNumUniqueChords(value);
+        setTargetScore(value);
         if (value >= 0) {
-            setSanitizedNumUniqueChords(Math.round(value));
+            setSanitizedTargetScore(Math.round(value));
         }
     }
 
@@ -113,6 +113,17 @@ const BruteForceBestTarget = ({
     const handleSubmit = async (event) => {
         event.preventDefault();
 
+        if (!wasmModule) {
+          console.warn("WASM not ready yet");
+          return;
+        }
+
+        // optional: also ensure export exists
+        if (typeof wasmModule.brute_force !== "function") {
+          console.error("brute_force not exported on wasmModule", Object.keys(wasmModule));
+          return;
+        }
+
         if(!textInput) {
             alert("Please provide an input seed.");
             return;
@@ -126,62 +137,35 @@ const BruteForceBestTarget = ({
         try {
             let d = sanitizedDice.find(d => d.name === die);
             console.time("simulate_brute_force_dice");
-            let max_50 = 0;
-            let max_i = 50;
-            let best_result = [];
-            let max_mean = 0;
-            let max_i_2 = 50;
-            let best_mean_result = [];
-            let best_dice_threshold_median = 1;
-            let best_dice_threshold_mean = 1;
-            for (let diceThreshold = 1; diceThreshold <= 6; diceThreshold++) {
-                for (let i = 50; i <= 8000; i += 50) {
-                    const data = wasmModule.analyze_dice(
-                        textInput,
-                        rngType,
-                        sanitizedNumThrows,
-                        d.probabilities[0],
-                        d.probabilities[1],
-                        d.probabilities[2],
-                        d.probabilities[3],
-                        d.probabilities[4],
-                        d.probabilities[5],
-                        diceThreshold,
-                        i, // minimumScore
-                        false,
-                        targetScore,
-                    );
-                    const r = data.max_scores_with_conditional_pass;
-                    const half = percentile(r.results, 50);
-                    if (half > max_50) {
-                        max_50 = half;
-                        max_i = i;
-                        best_result = r;
-                        best_dice_threshold_median = diceThreshold;
-                    }
-                    if (r.mean > max_mean) {
-                        max_mean = r.mean;
-                        max_i_2 = i;
-                        best_mean_result = r;
-                        best_dice_threshold_mean = diceThreshold;
-                    }
-                }
-            }
+            const r = wasmModule.brute_force(
+                textInput,
+                rngType,
+                sanitizedNumThrows,
+                sanitizedTargetScore,
+                d.probabilities[0],
+                d.probabilities[1],
+                d.probabilities[2],
+                d.probabilities[3],
+                d.probabilities[4],
+                d.probabilities[5]
+            );
             console.timeEnd("simulate_brute_force_dice");
 
-            setMean3(best_result.mean);
-            setMin3(best_result.minimum);
-            setMax3(best_result.maximum);
-            setResults3(best_result.results);
-            setBestTargetScore(max_i);
-            setBestMedianDiceThreshold(best_dice_threshold_median);
+            const best_median_simulation = r.best_median_target_score_results;
+            const best_mean_simulation = r.best_mean_target_score_results;
+            setMean3(best_median_simulation.mean);
+            setMin3(best_median_simulation.minimum);
+            setMax3(best_median_simulation.maximum);
+            setResults3(best_median_simulation.results);
+            setBestTargetScore(r.best_median_target_score);
+            setBestMedianDiceThreshold(r.best_median_dice_threshold);
 
-            setMean4(best_mean_result.mean);
-            setMin4(best_mean_result.minimum);
-            setMax4(best_mean_result.maximum);
-            setResults4(best_mean_result.results)
-            setBestTargetScore2(max_i_2);
-            setBestMeanDiceThreshold(best_dice_threshold_mean);
+            setMean4(best_mean_simulation.mean);
+            setMin4(best_mean_simulation.minimum);
+            setMax4(best_mean_simulation.maximum);
+            setResults4(best_mean_simulation.results);
+            setBestTargetScore2(r.best_mean_target_score);
+            setBestMeanDiceThreshold(r.best_mean_dice_threshold);
         } catch (error) {
             console.error("Error processing file", error);
             alert("An error occurred while generating the MIDI file.");

@@ -23,7 +23,18 @@ import ChordFinder from './ChordFinder';
 import BustProbabilities from "@/components/BustProbabilities";
 import BruteForceBestTarget from "@/components/BruteForceBestTarget";
 
-const WasmApp = ({ showExtraControls, cpbRef, wasmModule, toggleExtraControls }) => {
+const WasmApp = ({ showExtraControls, cpbRef, wasmModule, error, toggleExtraControls, loading }) => {
+  if (loading) return <div>Loading WASM…</div>;
+  if (error) {
+    return (
+      <pre className="p-4 whitespace-pre-wrap">
+        {String(error?.stack || error)}
+      </pre>
+    );
+  }
+  if (!wasmModule) {
+    return <div>WASM finished loading but module is null (unexpected)</div>;
+  }
   const [key, setKey] = useLocalStorage("key", 'random');
   const [chordGroup, setChordGroup] = useLocalStorage("chordGroup", 'default');
   const [customChords, setCustomChords] = useLocalStorage("customChords", []);
@@ -162,7 +173,7 @@ const WasmApp = ({ showExtraControls, cpbRef, wasmModule, toggleExtraControls })
 
   return (
     <div>
-      {wasmModule ? 
+      {!loading ? 
         <div>
           <Tabs defaultValue="charts" className="w-full max-w-5xl mx-auto">
             <TabsList className="grid w-full grid-cols-3">
