@@ -1,8 +1,5 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
-import dynamic from 'next/dynamic';
-import useLocalStorage from '@/hooks/useLocalStorage';
 import {
   Tabs,
   TabsContent,
@@ -35,19 +32,6 @@ const WasmApp = ({ showExtraControls, cpbRef, wasmModule, error, toggleExtraCont
   if (!wasmModule) {
     return <div>WASM finished loading but module is null (unexpected)</div>;
   }
-  const [key, setKey] = useLocalStorage("key", 'random');
-  const [chordGroup, setChordGroup] = useLocalStorage("chordGroup", 'default');
-  const [customChords, setCustomChords] = useLocalStorage("customChords", []);
-  const [scale, setScale] = useLocalStorage("scale", "disabled");
-  const [tableScheme, setTableScheme] = useLocalStorage("tableScheme", "contains_note");
-
-  const handleChordTypeSelection = (option) => {
-    if (customChords.includes(option)) {
-      setCustomChords(customChords.filter((item) => item !== option));
-    } else {
-      setCustomChords([...customChords, option]);
-    }
-  };
 
   const keys = [
     { label: "Any key", value: "random" },
