@@ -1,6 +1,3 @@
-// Small factorials up to 6 fit easily in u64.
-const FACT: [u64; 7] = [1, 1, 2, 6, 24, 120, 720];
-
 pub struct FarkleScorer {
     pub p: [f64; 6], // Individual probabilities for faces 1 through 6
 }

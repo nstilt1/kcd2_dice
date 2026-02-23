@@ -3,3 +3,11 @@ resolver = "3"
 members = [ "dice","statistics"
     
 ]
+
+[profile.release]
+#opt-level = 3       # optimize for speed
+opt-level = 'z'     # optimize for size
+lto = true          # enable link time optimization
+panic = 'abort'     # reduce binary size by not including panic messages
+codegen-units = 1   # fewer codegen units for better optimization
+strip = true        # strip debug symbols

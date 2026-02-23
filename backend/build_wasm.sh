@@ -13,20 +13,21 @@ if [ $? -eq 0 ]; then
       #-Z build-std=panic_abort,std
 
     RUSTFLAGS='-C target-feature=+atomics,+bulk-memory
-        -Clink-arg=--shared-memory -Clink-arg=--max-memory=1073741824 -Clink-arg=--import-memory
+        -Clink-arg=--shared-memory -Clink-arg=--max-memory=268435456 -Clink-arg=--import-memory
         -Clink-arg=--export=__wasm_init_tls -Clink-arg=--export=__tls_size
         -Clink-arg=--export=__tls_align -Clink-arg=--export=__tls_base' \
       rustup run nightly-2025-11-15 \
       wasm-pack build --target web --out-dir ../../frontend/public/wasm/dice --release \
+        --no-typescript
       #-- -Z build-std=panic_abort,std
     #wasm-pack build --release --target web --out-dir ../../frontend/public/wasm/dice --no-typescript
 
     # Generate JS glue for web + threads
-    wasm-bindgen \
-      --target web \
-      --out-dir ../../frontend/public/wasm/dice \
-      --no-typescript \
-      ../target/wasm32-unknown-unknown/release/dice.wasm
+    #wasm-bindgen \
+    #  --target web \
+    #  --out-dir ../../frontend/public/wasm/dice \
+    #  --no-typescript \
+    #  ../target/wasm32-unknown-unknown/release/dice.wasm
 
     #wasm-opt ../../frontend/public/dice.wasm \
     #  -o ../../frontend/public/dice_bg.wasm \

@@ -23,18 +23,10 @@ wasm-bindgen = { version = "0.2.108" }
 wasm-bindgen-rayon = "1.3.0"
 
 [package.metadata.wasm-pack.profile.release]
-wasm-opt = ['-Oz', "--enable-bulk-memory", "--enable-atomics", "--enable-threads", "--enable-sign-ext", "--enable-nontrapping-float-to-int"]
+wasm-opt = ['-O4', "--enable-bulk-memory", "--enable-atomics", "--enable-threads", "--enable-sign-ext", "--enable-nontrapping-float-to-int"]
 
 [package.metadata.wasm-pack.profile.release.wasm-bindgen]
 debug-js-glue = false               # removes debug info from the generated js glue code
 demangle-name-section = false       # controls whether function names are readable in stack traces
 dwarf-debug-info = false            # removes DWARF debug info
 omit-default-module-path = false    # removes default module path
-
-[profile.release]
-#opt-level = 3       # optimize for speed
-opt-level = 'z'     # optimize for size
-lto = true          # enable link time optimization
-panic = 'abort'     # reduce binary size by not including panic messages
-codegen-units = 1   # fewer codegen units for better optimization
-strip = true        # strip debug symbols

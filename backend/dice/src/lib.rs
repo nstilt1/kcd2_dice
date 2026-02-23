@@ -587,7 +587,7 @@ pub fn brute_force(
     let dice = Dice::new([prob_1, prob_2, prob_3, prob_4, prob_5, prob_6]);
     
     // The "Brute Force" with Reduction
-    (1..=6).into_par_iter().flat_map(|threshold| {
+    let mut result = (1..=6).into_par_iter().flat_map(|threshold| {
         let start = 50;
         let end = 9000;
         let step = 50;
@@ -602,9 +602,9 @@ pub fn brute_force(
         let (mean, min, max, median) = sort_mean_min_max_median(&mut results);
         
         // Bench on Safari with 8 concurrent threads, 1000 turns, 8000 max score, with favourable dice:
-        // simulate_brute_force_dice: 368.659ms
+        // simulate_brute_force_dice: 368.659ms | 600 ms | 900 ms
         /// Bench on MS Edge:
-        /// simulate_brute_force_dice: 1706.260009765625 ms
+        /// simulate_brute_force_dice: 1706.260009765625 ms | 2124 ms
         // Bench was taken with results: results.clone()
 
         // Removing results.clone() and recomputing the results buffer at the end resulted in the following 
@@ -621,14 +621,14 @@ pub fn brute_force(
                 minimum: min,
                 maximum: max,
                 median,
-                results: results.clone()
+                results: Vec::new(),
             },
             best_median_simulation: SimulationResult {
                 mean,
                 minimum: min,
                 maximum: max,
                 median,
-                results
+                results: Vec::new(),
             }
         }
     })
@@ -645,7 +645,28 @@ pub fn brute_force(
             a.best_median_target_score = b.best_median_target_score;
         }
         a
-    })
+    });
+
+    let (_, mut mean_simulation) = run_simulation(&seed_arr, &dice, num_turns, rng_type, result.best_mean_dice_threshold, result.best_mean_target_score, false, max_score);
+    let (mean, min, max, median) = sort_mean_min_max_median(&mut mean_simulation);
+    result.best_mean_simulation = SimulationResult {
+        mean,
+        minimum: min,
+        maximum: max,
+        median,
+        results: mean_simulation,
+    };
+    let (_, mut median_simulation) = run_simulation(&seed_arr, &dice, num_turns, rng_type, result.best_median_dice_threshold, result.best_median_target_score, false, max_score);
+    let (mean, min, max, median) = sort_mean_min_max_median(&mut median_simulation);
+    result.best_median_simulation = SimulationResult {
+        mean,
+        minimum: min,
+        maximum: max,
+        median,
+        results: median_simulation,
+    };
+
+    result
 }
 
 #[wasm_bindgen]
