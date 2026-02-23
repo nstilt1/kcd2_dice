@@ -44,6 +44,8 @@ if [ $? -eq 0 ]; then
 
 
     echo "Next.js path fix applied"
+    rm -rf ../../frontend/public/wasm/dice/.gitignore
+    echo "Removed .gitignore from output directory"
     echo "Build successful"
 
 
